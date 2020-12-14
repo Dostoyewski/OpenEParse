@@ -1,7 +1,8 @@
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 
+BADS = ['.', ',', '(', ')', ':', ';']
 
 def fix_bads(page):
     """
@@ -30,10 +31,9 @@ def convert_string(text):
     splt = text.split(sep=" ")
     out_t = ""
     for entry in splt:
-        entry_f = entry.replace(',', '')
-        entry_f = entry_f.replace('(', '')
-        entry_f = entry_f.replace(')', '')
-        w_splt = entry_f.split(sep="#")
+        for rec in BADS:
+            entry = entry.replace(rec, '')
+        w_splt = entry.split(sep="#")
         out_t += convert_to_utf(w_splt[1:]) + " "
         if w_splt[0] != '':
             out_t += w_splt[0] + " "

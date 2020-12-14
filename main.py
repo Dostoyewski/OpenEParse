@@ -10,4 +10,3 @@ if __name__ == "__main__":
     page = fix_bads(client.get(COURSE_URL).text)
     save_to_excel(get_problem(page), 'out.xlsx')
     print("Finish!")
-
