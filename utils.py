@@ -83,9 +83,12 @@ def process_answers(answers):
         try:
             if inp[0]['checked'] == 'true':
                 if "&amp;" in answer.get_text():
-                    answer_arr.append(answer.get_text().split(sep="&amp;")[0])
+                    answer_arr.append(answer.get_text().split(sep="&amp;")[0].replace("&#39", '"'))
         except KeyError:
             pass
+    # Да, это костыль. Ну и что?
+    while len(answer_arr) < 4:
+        answer_arr.append("—")
     return answer_arr
 
 
@@ -105,3 +108,18 @@ def authorizer(username, password, URL='https://sso.openedu.ru/login/', next_pag
     return client
 
 
+def save_to_excel(data, filename="out.xlsx"):
+    """
+    Saving data to excel
+    :param data: JSON from get_problem
+    :param filename: name of excel file
+    :return:
+    """
+    df = pd.DataFrame(columns=['question', 'answer1', 'answer2', 'answer3', 'answer4'])
+    for rec in data:
+        df = df.append({'question': rec['problem'],
+                        'answer1': rec['answers'][0],
+                        'answer2': rec['answers'][1],
+                        'answer3': rec['answers'][2],
+                        'answer4': rec['answers'][3]}, ignore_index=True)
+    df.to_excel(filename)
