@@ -35,6 +35,9 @@ def convert_string(text):
         for rec in BADS:
             entry = entry.replace(rec, '')
             entry = entry.replace("&#39", '"')
+            # Replacing '-' in names
+            if '#1' in entry:
+                entry = entry.replace('-', '')
         w_splt = entry.split(sep="#")
         out_t += convert_to_utf(w_splt[1:]) + " "
         if w_splt[0] != '':
@@ -67,9 +70,12 @@ def get_problem(page):
         pr_txt = entry.find_all(class_="response-fieldset-legend")
         answers = entry.find_all(class_="response-label field-label label-inline")
         answers_c = entry.find_all(class_="response-label field-label label-inline choicegroup_correct")
-        out_data.append({'id': i,
-                         'problem': convert_string(pr_txt[0].get_text()),
-                         'answers': process_answers(answers + answers_c)})
+        try:
+            out_data.append({'id': i,
+                             'problem': convert_string(pr_txt[0].get_text()),
+                             'answers': process_answers(answers + answers_c)})
+        except:
+            continue
     return out_data
 
 
