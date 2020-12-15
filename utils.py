@@ -2,7 +2,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-BADS = ['.', ',', '(', ')', ':', ';']
+BADS = ['.', ',', '(', ')', ':', ';', '?']
+
 
 def fix_bads(page):
     """
