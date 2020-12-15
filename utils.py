@@ -34,6 +34,7 @@ def convert_string(text):
     for entry in splt:
         for rec in BADS:
             entry = entry.replace(rec, '')
+            entry = entry.replace("&#39", '"')
         w_splt = entry.split(sep="#")
         out_t += convert_to_utf(w_splt[1:]) + " "
         if w_splt[0] != '':
