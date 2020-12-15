@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 BADS = ['.', ',', '(', ')', ':', ';', '?']
+PBADS = ["&amp;", "amp;", ";", '\n']
 
 
 def fix_bads(page):
@@ -26,9 +27,8 @@ def convert_string(text):
     :param text:
     :return:
     """
-    text = text.replace("&amp;", '')
-    text = text.replace("amp;", '')
-    text = text.replace(";", '')
+    for rec in PBADS:
+        text = text.replace(rec, '')
     splt = text.split(sep=" ")
     out_t = ""
     for entry in splt:
@@ -91,7 +91,13 @@ def process_answers(answers):
         try:
             if inp[0]['checked'] == 'true':
                 if "&amp;" in answer.get_text():
-                    answer_arr.append(answer.get_text().split(sep="&amp;")[0].replace("&#39", '"'))
+                    txt = ""
+                    try:
+                        txt = convert_string(answer.get_text())
+                    except:
+                        pass
+                    answer_arr.append(txt + " " +
+                                      answer.get_text().split(sep="&amp;")[0].replace("&#39", '"'))
         except KeyError:
             pass
     # Да, это костыль. Ну и что?
